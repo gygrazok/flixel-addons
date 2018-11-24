@@ -16,6 +16,7 @@ class TiledImageTile
 	
 	public function new(Source:Fast)
 	{
+		id = Source.att.id;
 		for (img in Source.nodes.image)
 		{
 			width = Std.parseFloat( img.att.width);

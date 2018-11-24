@@ -45,7 +45,7 @@ class TiledMap
 	// These will not be loaded.
 	var noLoadHash:Map<String, Bool> = new Map<String, Bool>();
 	var layerMap:Map<String, TiledLayer> = new Map<String, TiledLayer>();
-	
+	var templateMap:Map<String, TiledTemplate> = new Map<String, TiledTemplate>();
 	var rootPath:String;
 	
 	/**
@@ -154,14 +154,26 @@ class TiledMap
 		}
 	}
 	
-	public function getTileSet(name:String):TiledTileSet
-	{
+	public function getTileSet(name:String):TiledTileSet {
+		if (!tilesets.exists(name)) {
+			var ts:TiledTileSet = new TiledTileSet(new Fast(Xml.parse(Assets.getText(rootPath+name))).node.tileset);
+			tilesets.set(name,ts);
+			tilesetArray.push(ts);
+		}
 		return tilesets.get(name);
 	}
 	
 	public function getLayer(name:String):TiledLayer
 	{	
 		return layerMap.get(name);
+	}
+
+	public function getOrCreateTemplate(name:String):TiledTemplate {
+		if (!templateMap.exists(name)) {
+			var template:TiledTemplate = new TiledTemplate(new Fast(Xml.parse(Assets.getText(rootPath+name))),this);
+			templateMap.set(name,template);
+		}
+		return templateMap.get(name);
 	}
 	
 	/**

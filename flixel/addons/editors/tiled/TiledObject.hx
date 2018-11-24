@@ -70,6 +70,7 @@ class TiledObject
 	 */
 	public var points:Array<FlxPoint>;
 	
+	public var template:TiledTemplate;
 	public function new(source:Fast, parent:TiledObjectLayer)
 	{
 		xmlData = source;
@@ -82,6 +83,7 @@ class TiledObject
 		width = (source.has.width) ? Std.parseInt(source.att.width) : 0;
 		height = (source.has.height) ? Std.parseInt(source.att.height) : 0;
 		angle = (source.has.rotation) ? Std.parseFloat(source.att.rotation) : 0;
+		template = (source.has.template) ? parent.map.getOrCreateTemplate(source.att.template) : null;
 		// By default let's it be a rectangle object
 		objectType = RECTANGLE;
 		
@@ -111,10 +113,11 @@ class TiledObject
 			// If there is a gid it means that it's a tile object
 			objectType = TILE;
 		}
+
 		
 		// load properties
 		properties = new TiledPropertySet();
-		
+		applyTemplate();
 		for (node in source.nodes.properties)
 		{
 			properties.extend(node);
@@ -191,5 +194,15 @@ class TiledObject
 			multiplier = Int64.mul(multiplier, base);
 		}
 		return current;
+	}
+	
+	function applyTemplate():Void {
+		if (template != null) {
+			gid = template.gid;
+			type = template.type;
+			width = template.width;
+			height = template.height;
+			template.applyProperties(properties);
+		}
 	}
 }

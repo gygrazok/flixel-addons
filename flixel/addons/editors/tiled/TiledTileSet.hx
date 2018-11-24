@@ -62,8 +62,8 @@ class TiledTileSet
 		{
 			throw "Unknown TMX tileset format";
 		}
-		
-		firstGID = (source.has.firstgid) ? Std.parseInt(source.att.firstgid) : 1;
+
+		firstGID = (source.has.resolve("firstgid")) ? Std.parseInt(source.att.firstgid) : 1;
 		
 		if (source.has.source)
 		{
